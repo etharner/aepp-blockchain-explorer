@@ -12,7 +12,8 @@ let client = null
 export const getEpochClient = async (epochUrl = process.env.VUE_APP_EPOCH_URL) => {
   if (!client) {
     client = await Chain({
-      url: epochUrl
+      url: epochUrl,
+      internalUrl: epochUrl
     })
   }
   return client
