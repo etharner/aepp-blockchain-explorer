@@ -31,6 +31,11 @@ export default {
    * @returns {Promise<*>}
    */
   async getGenerationFromHash ({ state, commit, dispatch }, hash) {
+    if (state.hash_to_height[hash]) {
+      const generation = state.generations[state.hash_to_height[hash]]
+      commit('setGeneration', generation)
+      return generation
+    }
     const client = await getEpochClient()
     const generation = await client.api.getGenerationByHash(hash)
     const microBlocksHashes = generation.microBlocks
