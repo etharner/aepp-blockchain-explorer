@@ -90,11 +90,17 @@ export default {
    * @param {Object} store.state
    * @param {Function} store.commit
    * @param {Function} store.dispatch
-   * @param {String} store.height
    * @return {*}
+   * @param height
    */
   async getGenerationFromHeight ({ state, commit, dispatch }, height) {
-    if (state.generations[height]) return
+    console.log(typeof height)
+    console.log(typeof state.height)
+    if (!(state.height === height || state.height - 1 === height) && state.generations[height]) {
+      // last two generations are prone to change
+      // return if generation to get is not last or second last, and already exist in memory
+      return
+    }
     const client = await getEpochClient()
     const generation = await client.api.getGenerationByHeight(height)
     const microBlocksHashes = generation.microBlocks
@@ -170,7 +176,7 @@ export default {
   },
 
   /**
-   * getLatestBlocks pulls a list of blocks based on the
+   * getLatestGenerations pulls a list of blocks based on the
    * size of the payload
    * @param {Object} state
    * @param {Function} commit
